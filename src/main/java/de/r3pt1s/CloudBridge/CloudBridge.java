@@ -6,6 +6,7 @@ import de.r3pt1s.CloudBridge.handler.JoinHandler;
 import de.r3pt1s.CloudBridge.network.CloudBridgeSocket;
 import de.r3pt1s.CloudBridge.network.protocol.packet.*;
 import dev.waterdog.waterdogpe.ProxyServer;
+import dev.waterdog.waterdogpe.WaterdogPE;
 import dev.waterdog.waterdogpe.command.ConsoleCommandSender;
 import dev.waterdog.waterdogpe.event.defaults.PlayerDisconnectEvent;
 import dev.waterdog.waterdogpe.event.defaults.PlayerPreLoginEvent;
@@ -55,6 +56,8 @@ public class CloudBridge extends Plugin {
     @Override
     public void onDisable() {
         socket.getUdpClient().close();
+        threadPool.shutdown();
+        System.exit(1);
     }
 
     public String getServerName() {
