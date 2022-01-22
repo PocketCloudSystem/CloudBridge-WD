@@ -2,11 +2,9 @@
 package de.r3pt1s.CloudBridge;
 
 import de.r3pt1s.CloudBridge.event.PacketReceiveEvent;
-import de.r3pt1s.CloudBridge.handler.JoinHandler;
 import de.r3pt1s.CloudBridge.network.CloudBridgeSocket;
 import de.r3pt1s.CloudBridge.network.protocol.packet.*;
 import dev.waterdog.waterdogpe.ProxyServer;
-import dev.waterdog.waterdogpe.WaterdogPE;
 import dev.waterdog.waterdogpe.command.ConsoleCommandSender;
 import dev.waterdog.waterdogpe.event.defaults.PlayerDisconnectEvent;
 import dev.waterdog.waterdogpe.event.defaults.PlayerPreLoginEvent;
@@ -14,8 +12,10 @@ import dev.waterdog.waterdogpe.logger.MainLogger;
 import dev.waterdog.waterdogpe.network.serverinfo.BedrockServerInfo;
 import dev.waterdog.waterdogpe.plugin.Plugin;
 import dev.waterdog.waterdogpe.utils.config.YamlConfig;
-
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -41,7 +41,6 @@ public class CloudBridge extends Plugin {
             e.printStackTrace();
         }
 
-        getProxy().setJoinHandler(new JoinHandler());
         getProxy().getEventManager().subscribe(PacketReceiveEvent.class, this::onReceive);
         getProxy().getEventManager().subscribe(PlayerPreLoginEvent.class, this::onConnect);
         getProxy().getEventManager().subscribe(PlayerDisconnectEvent.class, this::onDisconnect);
@@ -50,6 +49,15 @@ public class CloudBridge extends Plugin {
 
         if (socket.getUdpClient().isConnected()) {
             MainLogger.getInstance().info("§cWait for incoming packets...");
+        }
+
+        File pid = new File(getProxy().getDataPath().toString() + "/pid.txt");
+        try {
+            FileWriter writer = new FileWriter(pid);
+            writer.append("" + ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
