@@ -27,4 +27,8 @@ public class ProtocolInfo {
     public static final int ID_STOP_SERVER_RESPONSE = 20;
     public static final int ID_LIST_SERVERS_REQUEST = 21;
     public static final int ID_LIST_SERVERS_RESPONSE = 22;
+    public static final int ID_SERVER_INFO_REQUEST = 23;
+    public static final int ID_SERVER_INFO_RESPONSE = 24;
+    public static final int ID_PLAYER_INFO_REQUEST = 25;
+    public static final int ID_PLAYER_INFO_RESPONSE = 26;
 }
