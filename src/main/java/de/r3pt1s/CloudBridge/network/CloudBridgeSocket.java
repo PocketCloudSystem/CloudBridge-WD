@@ -28,21 +28,26 @@ public class CloudBridgeSocket implements Runnable {
         udpClient.connect(address, port);
         MainLogger.getInstance().info("§aSuccessfully §rconnected to §e" + address.getHostName() + ":" + port + "§r!");
     }
-
+    
+    @SuppressWarnings("InfiniteLoopStatement")
     @Override
     public void run() {
-        while (true) {
-            if (udpClient.isConnected()) {
-                String buffer = udpClient.read();
-                if (buffer != null) {
-                    Packet packet = packetPool.getPacket(buffer);
-                    packet.decode();
-                    if (!(packet instanceof InvalidPacket)) {
+        do {
+            try {
+                if (udpClient.isConnected()) {
+                    String buffer = udpClient.read();
+                    if (buffer != null) {
+                        Packet packet = packetPool.getPacket(buffer);
+                        packet.decode();
+                        if (!(packet instanceof InvalidPacket)) {
                         ProxyServer.getInstance().getEventManager().callEvent(new PacketReceiveEvent(packet));
                     }
                 }
+                //System.out.println(udpClient.isConnected());
+            } catch (Exception e){
+                //System.out.println("");
             }
-        }
+        } while (true);
     }
 
     public void sendPacket(Packet packet) {
